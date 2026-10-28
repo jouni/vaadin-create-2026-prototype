@@ -1,29 +1,124 @@
-/* Add your styles here */
+@import "rail-nav.css";
+@import "people-directory.css";
 
-.app-logo {
-    border-radius: min(40%, var(--vaadin-radius-m));
-    margin-inline-start: var(--vaadin-padding-inline-container);
+html {
+  color-scheme: dark;
+  --aura-content-color-scheme: light dark;
+  --aura-background-color-light: #e5e5e5;
+  --aura-background-color-dark: #000;
+
+  --vaadin-breadcrumbs-font-size: var(--aura-font-size-xl);
+
+  /* TODO workaround to a Vaadin bug, that the loading indicator color doesn't adapt to the theme */
+  --lumo-primary-color: var(--aura-accent-color);
+  --lumo-primary-contrast-color: var(--aura-accent-contrast-color);
+  --status-text-color-offline: #fff;
 }
 
-.app-name {
-    font-weight: var(--aura-font-weight-semibold);
-    font-size: var(--aura-font-size-l);
+vaadin-breadcrumbs-item[slot="root"] {
+  @media (prefers-reduced-motion: no-preference) {
+    transition: width 0.3s 150ms, overflow 0s 0.3s, margin-inline-end 0.3s;
+    transition-behavior: allow-discrete;
+    interpolate-size: allow-keywords;
+  }
+  width: auto;
+  min-width: 0;
 }
 
-.app-footer {
-    color: var(--vaadin-text-color-secondary);
-    font-size: var(--aura-font-size-s);
+[drawer-opened] vaadin-breadcrumbs-item[slot="root"]:not(:only-child) {
+  width: 0;
+  overflow: clip;
+  margin-inline-end: calc(var(--vaadin-breadcrumbs-gap, var(--vaadin-gap-xs)) * -1);
+  transition-delay: 0s;
 }
 
-/* TODO: This is only for demo purposes. You can delete it. */
-vaadin-side-nav:has(vaadin-side-nav-item:only-child)::after {
-    display: block;
-    content: "More menu items will appear here when you add more views.";
-    font-size: var(--aura-font-size-s);
-    color: var(--vaadin-text-color-secondary);
-    box-sizing: border-box;
-    padding: 1em;
-    max-width: 14em;
-    min-width: 100%;
-    white-space: normal;
+vaadin-app-layout::part(content) {
+  --view-padding-inline: var(--vaadin-padding-xl);
+  --view-padding-block: var(--vaadin-padding-m);
+  padding-inline: var(--view-padding-inline);
+  padding-block: var(--view-padding-block);
+}
+
+.secondary-text {
+  color: var(--vaadin-text-color-secondary);
+}
+
+.bold-text {
+  font-weight: var(--aura-font-weight-semibold);
+}
+
+.icon-box {
+  border-radius: var(--vaadin-radius-m);
+  background: color-mix(in srgb, var(--aura-accent-color) 12%, transparent);
+  color: var(--aura-accent-text-color);
+  --vaadin-icon-size: 2.5rem;
+  --vaadin-icon-visual-size: 50%;
+}
+
+vaadin-tooltip {
+  color-scheme: dark;
+}
+
+vaadin-context-menu {
+  &:not([slot="submenu"]) {
+    --vaadin-overlay-animation-duration: 120ms;
+    --vaadin-overlay-scale-closed: 0.9;
+
+    &::part(overlay) {
+      transform-origin: 0% 0%;
+    }
+
+    &[bottom-aligned]::part(overlay) {
+      transform-origin: 0% 100%;
+    }
+
+    &[end-aligned]::part(overlay) {
+      transform-origin: 100% 0%;
+    }
+
+    &[bottom-aligned][end-aligned]::part(overlay) {
+      transform-origin: 100% 100%;
+    }
+  }
+
+  .user-menu {
+    --vaadin-item-overlay-padding: var(--vaadin-padding-s);
+
+    vaadin-context-menu-item {
+      padding: var(--vaadin-padding-s);
+
+      &:not([aria-haspopup="true"]) {
+        flex-direction: row-reverse;
+      }
+
+      &[aria-haspopup="true"] {
+        --vaadin-item-checkmark-display: none;
+      }
+    }
+
+    hr {
+      margin: var(--vaadin-gap-s);
+      border-color: var(--vaadin-border-color-secondary);
+    }
+  }
+}
+
+@keyframes --fade-in {
+  0% {
+    opacity: 0;
+  }
+}
+
+@keyframes --slide-up {
+  0% {
+    translate: var(--translate, 0 40px);
+  }
+}
+
+/* Register a custom property so that sibling-index() works as expected.
+Without it, all children compute to the same index (even though the inspector shows a different number for each row in a vaadin-grid) */
+@property --sibling-index {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 1;
 }

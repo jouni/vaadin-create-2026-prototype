@@ -9,7 +9,7 @@ import com.vaadin.flow.component.page.AppShellConfigurator;
 import com.vaadin.flow.component.page.Push;
 
 @SpringBootApplication
-@StyleSheet(Aura.STYLESHEET)
+@StyleSheet(value = Aura.STYLESHEET, layer = "aura")
 @StyleSheet("styles.css") // Your custom styles
 @Push
 public class Application implements AppShellConfigurator {

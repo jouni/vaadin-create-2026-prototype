@@ -1,95 +1,39 @@
-# My Application README
+# Vaadin Layout and Styling Prototypes (2026)
 
-- [ ] TODO Replace or update this README with instructions relevant to your application
+A collection of small layout and styling prototypes I researched before my session at the Vaadin Create 2026 conference. You can  find the project that I worked on during my "office hours" session at the conference at https://github.com/jouni/vaadin-create-2026-office-hours
 
-## Project Structure
+[![Watch the preview](https://github.com/jouni/vaadin-create-2026-prototype/raw/refs/heads/main/preview.png)](https://github.com/jouni/vaadin-create-2026-prototype/raw/refs/heads/main/preview.mov)
 
-This project has the following structure:
+## Featured Prototypes
 
-```
-src
-├── main/java
-│   └── [application package]
-│       ├── base
-│       │   └── ui
-│       │       ├── MainLayout.java
-│       │       └── ViewTitle.java
-│       ├── examplefeature
-│       │   ├── ui
-│       │   │   └── TaskListView.java
-│       │   ├── Task.java
-│       │   ├── TaskRepository.java
-│       │   └── TaskService.java                
-│       └── Application.java     
-├── main/resources
-│   ├── META-INF
-│   │   └── resources
-│   │       ├── icons
-│   │       │   └── clipboard-check.svg
-│   │       ├── styles.css
-│   │       └── view-title.css
-│   └── application.properties 
-└── test/java
-    └── [application package]
-        └── examplefeature
-            ├── ui
-            │   └── TaskListViewTest.java
-            └── TaskServiceTest.java                 
-```
+### 1. Rail Navigation with AppLayout
 
-The main entry point into the application is `Application.java`. This class contains the `main()` method that starts up 
-the Spring Boot application.
+A customized `AppLayout` navbar serves as a navigation rail, with sub-navigation items in the `AppLayout` drawer. Hover interactions make the sub-navigation accessible even when the drawer is collapsed.
 
-The project follows a *feature-based package structure*, organizing code by *functional units* rather than traditional 
-architectural layers. It includes two feature packages: `base` and `examplefeature`.
+### 2. Continuous Scrolling with a Lazy-Loaded Grid
 
-* The `base` package contains classes meant for reuse across different features, either through composition or 
-  inheritance. You can use them as-is, tweak them to your needs, or remove them.
-* The `examplefeature` package is an example feature package that demonstrates the structure. It represents a 
-  *self-contained unit of functionality*, including UI components, business logic, data access, and an integration test.
-  Once you create your own features, *you'll remove this package*.
+A typical data listing view places a summary area above a data table. The prototype makes the grid appear infinitely long while preserving lazy loading: scrolling initially moves the view, then seamlessly switches to the grid's own scrolling region when the end of the view is reached.
 
+This is a workaround for a `vaadin-grid` limitation: it cannot virtualize its rows based on an external scrolling region.
 
-## Starting in Development Mode
+### 3. iOS-Style MasterDetailLayout Transition
 
-To start the application in development mode, import it into your IDE and run the `Application` class. 
-You can also start the application from the command line by running: 
+A customized `MasterDetailLayout` transition for viewports below 500px wide. Opening the detail makes it occupy the full width while the master area slides and fades out, mimicking the iOS view navigation transition.
+
+### 4. Custom User Menu
+
+A user menu built with a regular `Button` and `ContextMenu` instead of a single-item `MenuBar`, making the trigger button easier to style. The context-menu overlay also has customized opening and closing animations, scaling up from the trigger button when opened and back down when closed.
+
+### 5. First-Visit Staggered Entry Animation
+
+On the first visit to the demo view, its elements animate into place in a staggered sequence. The entry animation does not replay on subsequent visits.
+
+## Run the Demo
+
+Import the project into your IDE and run the `Application` class, or start it from the command line:
 
 ```bash
 ./mvnw
 ```
 
-## Building for Production
-
-To build the application in production mode, run:
-
-```bash
-./mvnw package
-```
-
-To build a Docker image, run:
-
-```bash
-docker build -t my-application:latest .
-```
-
-If you use commercial components, pass the license key as a build secret:
-
-```bash
-docker build --secret id=proKey,src=$HOME/.vaadin/proKey -t my-application:latest .
-```
-
-To run the image, run:
-
-```bash
-docker run -p 8080:8080 -m 2g my-application:latest
-```
-
-The application is then available at http://localhost:8080. The `-m` option sets the memory limit of the container. The
-application uses up to 75% of it for the Java heap, which holds the UI state of all users, so adjust the limit to fit
-your application.
-
-## Next Steps
-
-The [Building Apps](https://vaadin.com/docs/v25/building-apps) guides contain hands-on advice for adding features to 
-your application.
+Open [localhost:8080](http://localhost:8080) in your browser.

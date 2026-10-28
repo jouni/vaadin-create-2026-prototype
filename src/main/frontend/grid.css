@@ -1,0 +1,15 @@
+#table {
+  overflow-y: var(--vaadin-grid-overflow-y, auto);
+
+  /* This works for macOS Safari, but breaks iOS Safari */
+  @supports not (-webkit-touch-callout: none) {
+    overscroll-behavior: auto !important;
+  }
+}
+
+@supports (overscroll-behavior: chain) {
+  #table {
+    /* This works for Chrome */
+    overscroll-behavior: chain !important;
+  }
+}

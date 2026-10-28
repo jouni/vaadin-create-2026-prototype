@@ -1,0 +1,250 @@
+vaadin-app-layout {
+  --nav-padding: var(--vaadin-padding-l);
+  --navbar-width: calc(
+    var(--nav-padding) * 2 +
+    var(--vaadin-padding-inline-container) * 2 +
+    var(--vaadin-side-nav-item-border-width, 1px) * 2 +
+    1lh
+  );
+  --vaadin-app-layout-drawer-width: auto;
+
+  padding-top: var(--aura-app-layout-inset);
+  padding-inline-start: calc(var(--vaadin-app-layout-drawer-offset-left) + var(--navbar-width) + var(--nav-padding));
+
+  &:not([drawer-opened]),
+  &:has([slot="navbar"] vaadin-side-nav-item[current]:not(.has-drawer)) {
+    padding-inline-start: var(--navbar-width);
+    /* Delay scaling the content area when the drawer is hidden */
+    &:not([no-anim]) {
+      transition-delay: 0.15s;
+    }
+  }
+
+  .user-menu {
+    margin-top: auto;
+    padding-inline: 0;
+  }
+
+  hr {
+    height: 1px;
+    border: 0;
+    background: var(--vaadin-border-color-secondary);
+    margin-block: var(--vaadin-gap-l);
+  }
+
+  vaadin-drawer-toggle {
+    --_icon-panel-close: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/><path d="m16 15-3-3 3-3"/></svg>');
+    --_icon-panel-open: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/><path d="m14 9 3 3-3 3"/></svg>');
+    --_vaadin-icon-menu: var(--_icon-panel-open);
+    position: absolute;
+    top: var(--vaadin-padding-m);
+    inset-inline-end: var(--vaadin-padding-m);
+
+    &:not(:hover) {
+      --vaadin-button-text-color: var(--vaadin-text-color-secondary);
+    }
+  }
+
+  &[drawer-opened] vaadin-drawer-toggle {
+    --_vaadin-icon-menu: var(--_icon-panel-close);
+  }
+
+  &[overlay] vaadin-drawer-toggle {
+    display: none;
+  }
+
+  /* Rail nav on the side */
+  &:not(:has([slot="navbar-bottom"]))::part(navbar) {
+    z-index: 1;
+    inset-inline-end: auto;
+    bottom: 0;
+    flex-direction: column;
+    align-items: stretch;
+    box-sizing: border-box;
+    width: var(--navbar-width);
+    padding: var(--nav-padding);
+    padding-block: var(--aura-app-layout-inset);
+    transition: width 0.3s;
+  }
+
+  [slot="navbar"] {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding-block: var(--vaadin-padding-s);
+    box-sizing: border-box;
+  }
+
+  [slot="navbar"] vaadin-side-nav {
+    box-sizing: border-box;
+    --vaadin-side-nav-items-gap: 0px;
+    margin-top: 0;
+
+    /* Turn the label into a divider line */
+    &::part(label) {
+      color: transparent;
+      flex-direction: column;
+      width: 100%;
+      box-sizing: border-box;
+      height: 1px;
+      padding-block: var(--vaadin-padding-m);
+    }
+
+    &::part(label)::before {
+      content: "";
+      display: block;
+      width: 100%;
+      min-height: 1px;
+      background-color: var(--vaadin-border-color);
+    }
+
+    > vaadin-side-nav-item {
+      padding-block: var(--vaadin-padding-xs);
+      padding-inline: 0;
+    }
+  }
+
+  &::part(drawer) {
+    z-index: 2;
+    inset-inline-start: var(--navbar-width);
+    inset-block: var(--aura-app-layout-inset);
+    height: auto;
+    padding: var(--nav-padding);
+    border: 1px solid transparent;
+    border-radius: var(--_app-layout-radius);
+    opacity: 0;
+    transform: translateX(-20px);
+    visibility: hidden;
+    backdrop-filter: none;
+    transition:
+      box-shadow var(--vaadin-app-layout-transition-duration) 0s cubic-bezier(0.78, 0, 0.22, 1),
+      background-color var(--vaadin-app-layout-transition-duration) 0s cubic-bezier(0.78, 0, 0.22, 1),
+      border-color var(--vaadin-app-layout-transition-duration) 0s cubic-bezier(0.78, 0, 0.22, 1),
+      transform var(--vaadin-app-layout-transition-duration) 150ms cubic-bezier(0.78, 0, 0.22, 1),
+      visibility var(--vaadin-app-layout-transition-duration) 150ms cubic-bezier(0.78, 0, 0.22, 1),
+      opacity var(--vaadin-app-layout-transition-duration) 150ms cubic-bezier(0.78, 0, 0.22, 1);
+    pointer-events: none;
+  }
+
+  &[drawer-opened]:has([slot="navbar"] vaadin-side-nav-item[current].has-drawer)::part(drawer) {
+    visibility: visible;
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: auto;
+  }
+
+  &:not([drawer-opened])::part(drawer),
+  &[drawer-opened]:has([slot="navbar"] vaadin-side-nav-item[current]:not(.has-drawer))::part(drawer) {
+    border-color: light-dark(var(--vaadin-border-color), var(--vaadin-border-color-secondary));
+    background: var(--aura-surface-color-solid);
+    --aura-surface-level: 1;
+    box-shadow: var(--aura-shadow-m);
+    transition:
+      box-shadow var(--vaadin-app-layout-transition-duration) 150ms cubic-bezier(0.78, 0, 0.22, 1),
+      background-color var(--vaadin-app-layout-transition-duration) 150ms cubic-bezier(0.78, 0, 0.22, 1),
+      border-color var(--vaadin-app-layout-transition-duration) 150ms cubic-bezier(0.78, 0, 0.22, 1),
+      transform var(--vaadin-app-layout-transition-duration) 0s cubic-bezier(0.78, 0, 0.22, 1),
+      visibility var(--vaadin-app-layout-transition-duration) 0s cubic-bezier(0.78, 0, 0.22, 1),
+      opacity var(--vaadin-app-layout-transition-duration) 0s cubic-bezier(0.78, 0, 0.22, 1);
+  }
+
+  &:has(vaadin-side-nav-item.has-drawer:hover)::part(drawer),
+  /* TODO We would want to test for :focus-visible, but that's on the
+  vaadin-side-nav-item::part(link) element inside the shadow DOM, and
+  CSS doesn't allow us to match to it */
+  &:has([slot="drawer"] :focus-visible)::part(drawer),
+  /* Testing for :focus-within works, but then the drawer stays open after you
+  click a link or a button inside it (because that link or button gets the focus
+  when you click it), and you need to click outside the drawer to close it */
+  /* &:has([slot="drawer"]:focus-within)::part(drawer), */
+  &::part(drawer):hover {
+    visibility: visible;
+    transform: translateX(0%);
+    touch-action: manipulation;
+    opacity: 1;
+    pointer-events: auto;
+    transition-delay: 0s;
+  }
+
+  > [slot="drawer"] {
+    display: grid;
+    grid-template-rows: min-content 1fr;
+    min-height: 100%;
+  }
+
+  > [slot="drawer"] > .sub-nav {
+    grid-row: 2;
+    grid-column: 1;
+    margin-top: 0;
+
+    vaadin-side-nav::part(label) {
+      color: var(--vaadin-text-color);
+      font-size: var(--aura-font-size-l);
+      font-weight: var(--aura-font-weight-semibold);
+      margin-bottom: var(--vaadin-gap-s);
+    }
+  }
+
+  [slot="drawer"] :where(.sub-nav) {
+    opacity: 0;
+    visibility: hidden;
+    transition: var(--no-anim, opacity 120ms ease 400ms, visibility 0s linear calc(400ms + 120ms));
+  }
+
+  &:has([slot="navbar"] vaadin-side-nav-item.has-drawer:is(:hover, :focus-visible)) [slot="drawer"] .sub-nav {
+    transition: none;
+  }
+
+  &:where(:not([overlay]):not(:has(
+    [slot="navbar"] vaadin-side-nav-item.has-drawer:not([current]):is(:hover, :focus-visible),
+    [slot="drawer"] .sub-nav:is(:hover, :focus-visible)
+  ))) [slot="drawer"] .sub-nav:has([current]) {
+    opacity: 1;
+    visibility: visible;
+    transition: var(--no-anim, opacity 120ms ease 400ms, visibility 0s linear 400ms);
+  }
+
+  &[no-anim] {
+    --no-anim: none;
+  }
+
+  /*
+  This is the part of the styles that needs to be kept in sync with the
+  Java implementation, that each SideNavItem in the rail and each
+  corresponding sub-nav in the drawer have unique class names, which are
+  then matched together in these selectors */
+  &:where(:has(.people:is(:hover, :focus-visible))) .people-navigation,
+  &:where(:has(.payroll:is(:hover, :focus-visible))) .payroll-navigation,
+  &:where(:has(.finance:is(:hover, :focus-visible))) .finance-navigation,
+  &:where(:has(.engage:is(:hover, :focus-visible))) .engage-navigation,
+ [slot="drawer"] .sub-nav:is(:hover, :focus-visible) {
+    opacity: 1;
+    visibility: visible;
+    transition: var(--no-anim, opacity 120ms ease, visibility 0s);
+  }
+
+  /* "Safe-triangle" for a hovered rail item, so that the user can move
+  their mouse diagonally towards the drawer and not trigger another
+  sub-nav to open instead */
+  [slot="navbar"] vaadin-side-nav-item:hover {
+    position: relative;
+    z-index: 1;
+    perspective: 1px;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: -200%;
+      inset-inline-start: 100%;
+      width: 17px;
+      height: 500%;
+      transform: rotateY(-90deg);
+      transform-origin: 100% 50%;
+    }
+  }
+
+  /* Small viewport / touch optimized */
+  &:has([slot="navbar-bottom"])::part(drawer) {
+    /* TODO */
+  }
+}

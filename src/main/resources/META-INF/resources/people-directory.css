@@ -1,0 +1,139 @@
+vaadin-app-layout {
+  container-type: inline-size;
+}
+
+.people-directory-view {
+  margin: calc(var(--view-padding-block) * -1) calc(var(--view-padding-inline) * -1);
+  height: calc(100% + var(--view-padding-block) * 2);
+
+  --vaadin-dashboard-row-min-height: auto;
+  --vaadin-dashboard-gap: var(--vaadin-gap-l);
+  --vaadin-dashboard-padding: 0px;
+  --vaadin-grid-cell-padding: var(--vaadin-padding-l) var(--vaadin-padding-m);
+
+  /* Using private/undocumented API */
+  --_detail-size: max(35%, 20rem);
+
+  @container (width < 500px) {
+    @media (prefers-reduced-motion: no-preference) {
+      &[transition]::part(master) {
+        transition: translate 0.3s, opacity 0.3s;
+      }
+    }
+
+    --aura-master-detail-layout-detail-inset: 0px;
+    --_detail-size: 100%;
+    --_master-size: 100%;
+
+    &[has-detail]:not([transition="remove"])::part(master) {
+      translate: -60px;
+      opacity: 0;
+    }
+  }
+
+  .people-directory-content {
+    --vaadin-vertical-layout-gap: var(--vaadin-gap-xl);
+    --vaadin-vertical-layout-padding: var(--view-padding-block) var(--view-padding-inline);
+    --vaadin-scroller-padding-inline: var(--view-padding-inline);
+    --vaadin-scroller-padding-block: var(--view-padding-block);
+
+    &[overflow~="bottom"] {
+      --vaadin-grid-overflow-y: hidden;
+    }
+
+    &:not([overflow~="bottom"]) {
+      overscroll-behavior: none;
+      scrollbar-width: none;
+    }
+  }
+
+  .directory-metrics {
+    flex-wrap: balance;
+  }
+
+  .directory-metric {
+    --vaadin-card-padding: var(--vaadin-padding-xl);
+    flex: 1;
+    min-width: 12em;
+
+    &:is(.v-success, .v-warning) {
+      --vaadin-card-subtitle-color: var(--aura-accent-text-color);
+    }
+  }
+
+  .metric-value {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: var(--aura-font-weight-semibold);
+    letter-spacing: -1%;
+  }
+
+  h2 {
+    font-size: var(--aura-font-size-xl);
+    line-height: var(--aura-line-height-xl);
+  }
+
+  .directory-filters {
+    width: 100%;
+    --vaadin-horizontal-layout-gap: var(--vaadin-gap-l);
+    --vaadin-icon-color: var(--vaadin-text-color-secondary);
+    flex-wrap: balance;
+  }
+
+  .people-grid {
+    margin-inline: calc(var(--view-padding-inline) * -1);
+    max-width: calc(100% + var(--view-padding-inline) * 2);
+    min-height: calc(100% + var(--vaadin-vertical-layout-gap));
+    color: var(--vaadin-text-color-secondary);
+
+    .person-name {
+      color: var(--vaadin-text-color);
+    }
+
+    &::part(first-column-cell) {
+      padding-inline-start: var(--vaadin-padding-l);
+    }
+
+    &::part(last-column-cell) {
+      padding-inline-end: var(--vaadin-padding-l);
+    }
+  }
+
+  &.first-visit {
+    .people-directory-content > vaadin-vertical-layout > *,
+    vaadin-card,
+    vaadin-grid::part(body-row) {
+      --sibling-index: sibling-index();
+      animation: --fade-in 0.4s calc(var(--sibling-index) * 0.1s) linear backwards;
+      animation-name: --fade-in, --slide-up;
+      animation-timing-function: linear, ease;
+    }
+
+    vaadin-card {
+      animation-delay: calc(0.1s + var(--sibling-index) * 0.1s);
+      --translate: 60px 0;
+    }
+
+    vaadin-grid::part(body-row) {
+      animation-delay: calc(0.5s + var(--sibling-index) * 0.06s);
+    }
+  }
+}
+
+.person-editor-view {
+  --vaadin-vertical-layout-gap: var(--vaadin-gap-xl);
+  --vaadin-vertical-layout-padding: var(--vaadin-padding-xl);
+
+  .person-editor-header {
+    gap: var(--vaadin-gap-l);
+  }
+
+  .person-editor-identity {
+    min-width: 0;
+
+    .secondary-text {
+      min-width:0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+}
